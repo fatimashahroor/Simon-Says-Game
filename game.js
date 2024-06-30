@@ -7,6 +7,7 @@ let level = 0
 function nextSequence() {
     gamePattern.push(buttonColors[randomColor()]);
     console.log(gamePattern);
+    playGame();    
 }
 
 function togglePressedClass (pressedBtn) {
@@ -21,7 +22,7 @@ function playGame() {
     button.classList.add("pressed");
     console.log(button);
     audio.play();
-    setTimeout( () => {togglePressedClass(lastElement)}, 50);
+    setTimeout( () => {togglePressedClass(lastElement)},100);
     $(".btn").click(function () {
         const userChosenColor = this.id;
         this.classList.add("pressed");
@@ -36,12 +37,14 @@ function playGame() {
             userClickedPattern=[];
             level=level+1
             document.querySelector("#level-title").textContent = `Level ${level}`;
-            setTimeout(nextSequence(), 3000);
             $(".btn").unbind("click");
-            playGame();
+            setTimeout(nextSequence(), 2000);
+            // in case we have two consecutive buttons with the same color
+            if(gamePattern[gamePattern.length-1]==gamePattern[gamePattern.length-2] && gamePattern.length > 1)
+                setTimeout( function() {togglePressedClass(userChosenColor)}, 50);
+
         }
     });
-
 }
 
 
@@ -72,7 +75,7 @@ document.addEventListener('keypress', () => {
         document.querySelector("#level-title").textContent = `Level ${level}`
         nextSequence();
         started = true
-        playGame()
+
     }
 })
 
